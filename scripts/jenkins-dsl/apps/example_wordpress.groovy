@@ -4,7 +4,7 @@ pipelineJob('example_wordpress') {
             script("""
                 pipeline {
                     agent {
-                        label default
+                        labels default
                     }
                     stages {
                         stage('Checkout') {
