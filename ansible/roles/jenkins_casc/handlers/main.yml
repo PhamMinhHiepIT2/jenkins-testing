@@ -1,6 +1,0 @@
----
-# handlers file for jenkins_casc
-- name: Restart Jenkins
-  systemd:
-    name: jenkins
-    state: restarted

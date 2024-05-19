@@ -1,5 +1,0 @@
-galaxy_info:
-  author: Hiep Pham
-  description: Ansible role to install Jenkins and set up Jenkins Configuration as Code (JCasC)
-  license: license (GPL-2.0-or-later, MIT, etc)
-  min_ansible_version: "2.1"
