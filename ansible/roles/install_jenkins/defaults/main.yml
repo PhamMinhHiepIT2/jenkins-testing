@@ -1,0 +1,35 @@
+---
+# defaults file for install_jenkins_server
+jenkins_owner: jenkins
+jenkins_group: jenkins
+jenkins_admin_password: admin
+jenkins_plugins:
+  - configuration-as-code
+  - git
+  - matrix-auth
+  - email-ext
+  - font-awesome-api
+  - junit
+  - matrix-project
+  - mailer
+  - pipeline-build-step
+  - pipeline-github-lib
+  - pipeline-graph-analysis
+  - pipeline-input-step
+  - pipeline-milestone-step
+  - pipeline-model-api
+  - pipeline-model-definition
+  - pipeline-model-extensions
+  - pipeline-rest-api
+  - pipeline-stage-step
+  - pipeline-stage-tags-metadata
+  - pipeline-stage-view
+  - pipeline-utility-steps
+  - plain-credentials
+  - credentials
+  - credentials-binding
+  - display-url-api
+  - scm-api
+  - ssh-credentials
+  - ws-cleanup
+  - job-dsl

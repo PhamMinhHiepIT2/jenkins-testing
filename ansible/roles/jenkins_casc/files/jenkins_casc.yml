@@ -1,0 +1,29 @@
+jenkins:
+  systemMessage: "Welcome to Jenkins configured by Code!"
+  numExecutors: 5
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "admin"
+        - id: "hieppm"
+          password: "123456"
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Read:anonymous"
+        - "Overall/Administer:authenticated"
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  scm:
+    git:
+      installations:
+        - name: "Default"
+          home: "git"
+  tools:
+    installations:
+      - name: "Default"
+        jdk:
+          home: "/usr/lib/jvm/java-17-openjdk"
+  disableRememberMe: true

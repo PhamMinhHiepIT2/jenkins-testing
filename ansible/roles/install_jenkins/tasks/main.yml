@@ -1,0 +1,105 @@
+---
+# tasks file for install_jenkins_server
+- name: Add Jenkins repository
+  get_url:
+    url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import Jenkins repository key
+  rpm_key:
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+    state: present
+
+- name: Install Jenkins
+  yum:
+    name: jenkins
+    state: present
+
+- name: Copy the init files
+  copy:
+    dest: "/var/lib/jenkins/init.groovy.d/"
+    src: "init.groovy.d/"
+
+- name: Copy Jenkins Configuration as Code (JCasC) file
+  copy:
+    src: jenkins.yaml
+    dest: /var/lib/jenkins/jenkins.yaml
+    owner: "{{ jenkins_owner }}"
+    group: "{{ jenkins_group }}"
+    mode: "0644"
+
+- name: Start and enable Jenkins service
+  systemd:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: Get the content of the file initialAdminPassword
+  slurp:
+    src: /var/lib/jenkins/secrets/initialAdminPassword
+  register: file_content
+
+- name: Set_fact Jenkins admin initialPassword
+  set_fact:
+    initialAdminPassword: "{{ file_content.content | b64decode | trim }}"
+
+- name: debug
+  debug:
+    msg: "admin password: {{ initialAdminPassword }}"
+
+- name: Restart Jenkins
+  systemd:
+    name: jenkins
+    state: restarted
+    daemon_reload: true
+
+- name: Install necessary plugins
+  jenkins_plugin:
+    name: "{{ item }}"
+    state: present
+    url: "http://{{ ansible_host }}:8080/"
+    url_username: "admin"
+    url_password: "{{ jenkins_admin_password }}"
+    force_basic_auth: yes
+  with_items: "{{ jenkins_plugins }}"
+
+- name: Ensure /var/lib/jenkins/casc_configs directory exists
+  file:
+    path: /var/lib/jenkins/casc_configs
+    state: directory
+    owner: "{{ jenkins_owner }}"
+    group: "{{ jenkins_group }}"
+
+- name: Update JENKINS_JAVA_OPTIONS
+  lineinfile:
+    path: "/etc/sysconfig/jenkins"
+    regexp: ".*-Djava.awt.headless=true.*"
+    line: 'JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Djenkins.install.runSetupWizard=false -Djava.io.tmpdir=/var/cache/jenkins/tmp/ -Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York -Duser.timezone=America/New_York"'
+    state: present
+
+- name: update JENKINS_HOME ownership
+  file:
+    path: /var/lib/jenkins
+    owner: "{{ jenkins_owner }}"
+    group: "{{ jenkins_group }}"
+    state: directory
+    recurse: yes
+
+# - name: Set Jenkins environment variable for JCasC
+#   lineinfile:
+#     path: /etc/sysconfig/jenkins
+#     line: 'JENKINS_JAVA_OPTIONS="-Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/lib/jenkins/casc_configs/jenkins.yaml"'
+#     create: yes
+#     state: present
+
+# - name: Jenkins config JCasC
+#   lineinfile: dest=/usr/lib/systemd/system/jenkins.service
+#     regexp='^Environment="JAVA_OPTS=-Djava.awt.headless=true'
+#     line='Environment="-Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/lib/jenkins/casc_configs/jenkins.yaml"'
+#   register: result_skip_startup_wizard
+
+- name: Restart Jenkins
+  systemd:
+    name: jenkins
+    state: restarted
+    daemon_reload: true

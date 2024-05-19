@@ -1,0 +1,4 @@
+---
+# defaults file for jenkins_casc
+jenkins_owner: jenkins
+jenkins_group: jenkins
