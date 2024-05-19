@@ -3,7 +3,9 @@ pipelineJob('example_wordpress') {
         cps {
             script("""
                 pipeline {
-                    agent any
+                    agent {
+                        label default
+                    }
                     stages {
                         stage('Checkout') {
                             steps {
