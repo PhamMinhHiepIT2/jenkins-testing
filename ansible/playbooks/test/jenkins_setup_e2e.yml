@@ -11,6 +11,6 @@
           6434623233616431640a633432653266386464366332643138613231613465356663633466663837
           3732
   roles:
-  - ../../roles/install_java
+  - ../../roles/install_jenkins_deps
   - ../../roles/install_jenkins
 

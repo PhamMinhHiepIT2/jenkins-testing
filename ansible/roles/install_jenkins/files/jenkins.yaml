@@ -115,32 +115,93 @@ jenkins:
     - all:
         name: "all"
   viewsTabBar: "standard"
-  jobs:
-    - script: >
-        pipelineJob('job-seeder') {
-          definition {
-            cps {
-              script("""
-                pipeline {
-                  agent any
-                  stages {
-                    stage('Checkout') {
-                      steps {
-                        git url: 'https://github.com/your-repo/your-dsl-repo.git', branch: 'main'
-                      }
-                    }
-                    stage('Seed Jobs') {
-                      steps {
-                        jobDsl targets: 'scripts/jenkins-dsl/app/*.groovy', removedJobAction: 'ignore'
-                      }
-                    }
-                  }
-                }
-              """)
-              sandbox()
-            }
-          }
-        }
+  # credentials:
+  #   system:
+  #     domainCredentials:
+  #       - credentials:
+  #           - basicSSHUserPrivateKey:
+  #               scope: SYSTEM
+  #               id: "git-ssh-key"
+  #               username: "git"
+  #               privateKeySource:
+  #                 directEntry:
+  #                   privateKey: |
+  #                     -----BEGIN OPENSSH PRIVATE KEY-----
+  #                     b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
+  #                     NhAAAAAwEAAQAAAgEAx7mbCJ4gQYtS5Odyq5iU4AY49Ka0NHZJbU3YEVl3xF+ofPsIRRUB
+  #                     xh01iZEQ08X53Jg63b+/gtFL/xYQnPHo0fHVYIJRWXQ8tsNR7Mji8HA3V2m5/6pF7ZUG8f
+  #                     GQDyv2oTcepCQVXxsDQTnNrdB2bUpO/7l9NSQiCrQu84IKa3sDxLRhvjHfh4h+Tb63R910
+  #                     qEKHMzTedzfTPa4pWdXWyHxlKPemDIn88mzdlAzgdeq7+WCQVofcIXWsrEBr1eP4mW/7MO
+  #                     cHt7xa8YDFDLHhTtpp0cdcA8EV7x3OOqTEWGjKH7DvZreEVvqzh4Boai3u9gxnZ62+4wLo
+  #                     p/Okrdj8EPqOdwHhW79zJmPquKsNVRLK5lNl2NKdn0Xft55fgj1nWWpo8IfM8qIg9HRo0c
+  #                     Er/+SXqK5v0IdKneJ/Im9m9gaCQUAdGUZgUHzycn+oYyUCvjcG/ZRUIpWk2iOuZTvojAhq
+  #                     i4Ma/sgj57BYLi37j8CPbD7T0An6zwTf4LYBIX1PN875VslNW4pHqKgEvPhMQkr0bSQRSL
+  #                     tyAJRXvfefaR/rH9hHnk6eUebjpy3uta1DRflxSRm+ubR0UMUcyrt3LdED5at4vJs1IHAb
+  #                     nKfebpAUHVVbSyIEJ6AU1W1cn1Ybx902eYmOxzUHYVT64T/94oRkXydonO99vzZEA/QNtk
+  #                     cAAAdYVbkoB1W5KAcAAAAHc3NoLXJzYQAAAgEAx7mbCJ4gQYtS5Odyq5iU4AY49Ka0NHZJ
+  #                     bU3YEVl3xF+ofPsIRRUBxh01iZEQ08X53Jg63b+/gtFL/xYQnPHo0fHVYIJRWXQ8tsNR7M
+  #                     ji8HA3V2m5/6pF7ZUG8fGQDyv2oTcepCQVXxsDQTnNrdB2bUpO/7l9NSQiCrQu84IKa3sD
+  #                     xLRhvjHfh4h+Tb63R910qEKHMzTedzfTPa4pWdXWyHxlKPemDIn88mzdlAzgdeq7+WCQVo
+  #                     fcIXWsrEBr1eP4mW/7MOcHt7xa8YDFDLHhTtpp0cdcA8EV7x3OOqTEWGjKH7DvZreEVvqz
+  #                     h4Boai3u9gxnZ62+4wLop/Okrdj8EPqOdwHhW79zJmPquKsNVRLK5lNl2NKdn0Xft55fgj
+  #                     1nWWpo8IfM8qIg9HRo0cEr/+SXqK5v0IdKneJ/Im9m9gaCQUAdGUZgUHzycn+oYyUCvjcG
+  #                     /ZRUIpWk2iOuZTvojAhqi4Ma/sgj57BYLi37j8CPbD7T0An6zwTf4LYBIX1PN875VslNW4
+  #                     pHqKgEvPhMQkr0bSQRSLtyAJRXvfefaR/rH9hHnk6eUebjpy3uta1DRflxSRm+ubR0UMUc
+  #                     yrt3LdED5at4vJs1IHAbnKfebpAUHVVbSyIEJ6AU1W1cn1Ybx902eYmOxzUHYVT64T/94o
+  #                     RkXydonO99vzZEA/QNtkcAAAADAQABAAACAF1Ck9wASjuQ3RI56NerlcjN3waOWRMuMLcz
+  #                     ZDMlvcEakchaR9BKMNvbg8ZK0LqydSvGgaZOBRUGuh/Qo81FQFvYOrSn5WiJ2FfW+IhCfY
+  #                     WcQJs2qT1yuthngCi1jXkoJC+/VzV6C+iu6mQoo5wH/WSnECBk8sw/pQ2ueUYHcOojNO1C
+  #                     9WkkTKYy3BddeKO8Ct8OwabthvvQO3lPu8tRCMvxGiN5EDZGsLBamVSqdp1ZEJEvv/ZH1k
+  #                     hhdFGyeygTHWA4Y+i/2GC5ORYP9PMqlHSHlGX6W0L9hEp1dnj3ux81PzxxGDi0dL1Qr0gU
+  #                     c60w6aZGwHovLTU/hHf4UutCqOBJGXdOzDgwkNYGkqcJ5V5kMixAR4VRwDHtv+aL1YVrcH
+  #                     7Tlx0e0nLMHwBb8k01W61h+OwHPQf2vwwK/PttQoE1Jt2pdHSiMhG70Q2TpEbxS8YMl/oW
+  #                     /B3g9DAA8TTo9oe1Pof+rcdHOVierBgLWjwAFXZ20u1lKHI2uWXQN7gTAs4GLPQ5OHFUE0
+  #                     as8PozivSkpWSIbE/9oRhxebJ/vmJwpT0Sd8727oj3KrWzLxqO89kbJluToSq21wflWwYH
+  #                     k3KljmWN2e76FUM8aQCFThW/C/v94LZuhvHsZWqnxa4Z1fWS9elBF8hua6QfG5ogqDn8T6
+  #                     YXY8Ndi+xWYxoUP6xBAAABAARZ6yCznRD/8J0vBPrsFQlE/w+3CgnhLSwkygoeqOMG+f5P
+  #                     f5bPYkB+uhB7Z7u9sbmTimd29GzuU9y6B/BNaTDymmIvARe1s3Wr0q+16HxzbxL1wmgDiN
+  #                     P15i5rfht2DFIzfK5q5IfTOkgnoXFIN6ZxH27h8nWizx9mOprlaovsv3BVJU0oGfxm/e1T
+  #                     pTTvJ7x2V4rVcSgUFDfMpOKvmFCNvOk5SVPEfOY7Ik85xWqhb18v1CiipTz8c2hcsz6Ujf
+  #                     NMAGEnGIrPWIObZA6n5zMhDAX9GdUt/KvE0Ybiowa5SpTI8s+tjKx8WXTcyOSQFC71vzqP
+  #                     Xf34glUTe8bCsRkAAAEBAPHMNsGb7XxKZlCdOycxatumNN1JSF/LWeafMYMAMHH06N7OWU
+  #                     QLtp8JkLzLag2NWc27QiE5MX32cxqp+BJmWN7T0K3NGYDcMYnGRs/khWqbpOK/dAndJhPl
+  #                     +GnwCwqIk4Vq8ABU+yCXnQRYLX5cNGD9vfdFxscVwjQ58hch5SFLaUn+CFA70DHUir+21R
+  #                     smlOG+EU0XB7Tzgp0E7CAlpE5Xg2c5DdM+Mafp1Py2yGOGaBoHtdou6GpXtkbXAb4IMlDn
+  #                     rlJgBFW1Ue8UbbPJvUKePjG2u7+yQto8LYGrAL8Sp752d0/sNuW+uWWWBSym6FNzOLYQWe
+  #                     pgjG8YlJ/FLHEAAAEBANN0xEGDZNHMbI89YbQkH4pgACjvBqidiasPs1U16qyHawG1QQiy
+  #                     v6VzNHHGQJqzMCwwuXgBpBuXKvsnlB4T83B12VI7ZxAYwlQST0jBBFjBSL3Z9e67RlkjnF
+  #                     U7EOBil4Y+BSxcMQU4IutFOrJheYDI0kPt5xAEbQITGNG4opROnmjqa/OM1HjaOSkKCRZO
+  #                     nc3qX6w0ysWJGU7by8ovFJVH8IAS607XiRWi7hmwJAxD0WIRmQ3Uy9oVYuSkODqbLwX3Nv
+  #                     6etf71qkA13yTyYqhg6nNTi9w1v5oq2KGW99qC0IGzebWE1joAX7ORBN0HNzAKpQ3Dc1g9
+  #                     QXtd0xWgyjcAAAAeaGllcHBtQFBoYW1zLU1hY0Jvb2stUHJvLmxvY2FsAQIDBAU=
+  #                     -----END OPENSSH PRIVATE KEY-----
+  #               description: "SSH key for cloning Git repository"
+  # jobs:
+  #   - script: >
+  #       pipelineJob('job-seeder') {
+  #         definition {
+  #           cps {
+  #             script("""
+  #               pipeline {
+  #                 agent any
+  #                 stages {
+  #                   stage('Checkout') {
+  #                     steps {
+  #                       git url: 'https://github.com/PhamMinhHiepIT2/jenkins-testing.git', branch: 'main'
+  #                     }
+  #                   }
+  #                   stage('Seed Jobs') {
+  #                     steps {
+  #                       jobDsl targets: 'scripts/jenkins-dsl/app/*.groovy', removedJobAction: 'ignore'
+  #                     }
+  #                   }
+  #                 }
+  #               }
+  #             """)
+  #             sandbox()
+  #           }
+  #         }
+  #       }
 unclassified:
   buildDiscarders:
     configuredBuildDiscarders:

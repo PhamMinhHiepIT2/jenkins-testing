@@ -34,6 +34,14 @@
     state: started
     enabled: yes
 
+- name: update JENKINS_HOME ownership
+  file:
+    path: /var/lib/jenkins
+    owner: "{{ jenkins_owner }}"
+    group: "{{ jenkins_group }}"
+    state: directory
+    recurse: yes
+
 - name: Get the content of the file initialAdminPassword
   slurp:
     src: /var/lib/jenkins/secrets/initialAdminPassword
@@ -76,14 +84,6 @@
     regexp: ".*-Djava.awt.headless=true.*"
     line: 'JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Djenkins.install.runSetupWizard=false -Djava.io.tmpdir=/var/cache/jenkins/tmp/ -Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York -Duser.timezone=America/New_York"'
     state: present
-
-- name: update JENKINS_HOME ownership
-  file:
-    path: /var/lib/jenkins
-    owner: "{{ jenkins_owner }}"
-    group: "{{ jenkins_group }}"
-    state: directory
-    recurse: yes
 
 # - name: Set Jenkins environment variable for JCasC
 #   lineinfile:
