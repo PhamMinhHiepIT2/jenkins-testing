@@ -1,0 +1,14 @@
+wp/
+wp-content/uploads
+
+docker-compose.override.yaml
+!.devcontainer/docker-compose.override.yaml
+!.gitpod/docker-compose.override.yaml
+
+/*.sql
+/wp-content/**/*.sql
+
+.env
+
+# WP-CLI
+wp-cli.local.yml
