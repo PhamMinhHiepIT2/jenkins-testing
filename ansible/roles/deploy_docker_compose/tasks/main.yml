@@ -13,7 +13,7 @@
 
 - name: Create docker-compose.override.yml
   template:
-    src: roles/deploy_docker_compose/templates/docker-compose.override.yml.j2
+    src: docker-compose.override.yml.j2
     dest: "{{ git_dest }}/docker-compose.override.yml"
 
 - name: Start Docker Compose
