@@ -33,3 +33,4 @@ jenkins_plugins:
   - ssh-credentials
   - ws-cleanup
   - job-dsl
+  - ssh-agent

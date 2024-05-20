@@ -5,18 +5,6 @@
     name: git
     state: present
 
-- name: Generate SSH key if not exists
-  openssh_keypair:
-    type: rsa
-    size: 2048
-  register: ssh_key_result
-  check_mode: no
-
-- name: Print generated SSH key
-  debug:
-    msg: "SSH key generated: {{ ssh_key_result.public_key }}"
-  when: ssh_key_result.changed
-
 - name: Clone the repository
   git:
     repo: "{{ repo_url }}"

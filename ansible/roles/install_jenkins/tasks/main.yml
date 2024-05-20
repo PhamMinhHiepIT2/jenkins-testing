@@ -85,7 +85,6 @@
     regexp: ".*-Djava.awt.headless=true.*"
     line: 'JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Djenkins.install.runSetupWizard=false -Djava.io.tmpdir=/var/cache/jenkins/tmp/ -Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York -Duser.timezone=America/New_York"'
     state: present
-  notify: Restart Jenkins
 # - name: Set Jenkins environment variable for JCasC
 #   lineinfile:
 #     path: /etc/sysconfig/jenkins
@@ -99,8 +98,8 @@
 #     line='Environment="-Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/lib/jenkins/casc_configs/jenkins.yaml"'
 #   register: result_skip_startup_wizard
 
-# - name: Restart Jenkins
-#   systemd:
-#     name: jenkins
-#     state: restarted
-#     daemon_reload: true
+- name: Restart Jenkins
+  systemd:
+    name: jenkins
+    state: restarted
+    daemon_reload: true
