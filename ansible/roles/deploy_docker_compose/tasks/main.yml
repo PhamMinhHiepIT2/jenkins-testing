@@ -15,10 +15,10 @@
 - name: Create docker-compose.override.yml
   template:
     src: docker-compose.override.yml.j2
-    dest: "{{ git_dest }}/docker-compose.override.yml"
+    dest: "{{ git_dest }}/wpsite/docker-compose.override.yml"
 
 - name: Start Docker Compose
-  shell: "docker compose -f {{ git_dest }}/{{ docker_compose_file }} -f {{ git_dest }}/docker-compose.override.yml up -d"
+  shell: "docker compose -f {{ git_dest }}/wpsite/{{ docker_compose_file }} -f {{ git_dest }}/wpsite/docker-compose.override.yml up -d"
 
 - name: Wait for service to become healthy
   command: >
