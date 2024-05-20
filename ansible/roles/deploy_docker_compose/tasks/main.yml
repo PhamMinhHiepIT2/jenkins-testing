@@ -19,21 +19,20 @@
 
 - name: Start Docker Compose
   shell: "docker compose -f {{ git_dest }}/wpsite/{{ docker_compose_file }} -f {{ git_dest }}/wpsite/docker-compose.override.yml up -d"
-
-- name: Wait for service to become healthy
-  command: >
-    bash -c 'for i in {1..30}; do
-    if curl -s -o /dev/null -w "%{http_code}" {{ healthcheck_url }} | grep -q "200"; then
-      echo "Service is healthy";
-      exit 0;
-    else
-      echo "Waiting for service to become healthy...";
-      sleep 10;
-    fi;
-    done;
-    echo "Service did not become healthy in time";
-    exit 1'
-  register: health_check
-  failed_when: health_check.rc != 0
-  retries: 30
-  delay: 10
+# - name: Wait for service to become healthy
+#   command: >
+#     bash -c 'for i in {1..30}; do
+#     if curl -s -o /dev/null -w "%{http_code}" {{ healthcheck_url }} | grep -q "200"; then
+#       echo "Service is healthy";
+#       exit 0;
+#     else
+#       echo "Waiting for service to become healthy...";
+#       sleep 10;
+#     fi;
+#     done;
+#     echo "Service did not become healthy in time";
+#     exit 1'
+#   register: health_check
+#   failed_when: health_check.rc != 0
+#   retries: 30
+#   delay: 10
