@@ -6,7 +6,7 @@
     state: present
 
 - name: Generate SSH key if not exists
-  ssh_keypair:
+  openssh_keypair:
     type: rsa
     size: 2048
   register: ssh_key_result
