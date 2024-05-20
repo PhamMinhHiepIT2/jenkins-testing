@@ -2,7 +2,7 @@
 # vars file for deploy_docker_compose
 repo_url: https://github.com/PhamMinhHiepIT2/jenkins-testing.git
 new_image_tag: latest
-service_name: wpsite
+service_name: wordpress
 image_name: phamhiep/wpsite
 git_dest: /opt/app_repo
 healthcheck_url: http://localhost:8080
