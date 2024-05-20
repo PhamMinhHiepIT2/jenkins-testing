@@ -1,6 +1,6 @@
 ---
 # vars file for deploy_docker_compose
-repo_url: git@github.com:PhamMinhHiepIT2/jenkins-testing.git
+repo_url: https://github.com/PhamMinhHiepIT2/jenkins-testing.git
 new_image_tag: latest
 service_name: wpsite
 image_name: phamhiep/wpsite
