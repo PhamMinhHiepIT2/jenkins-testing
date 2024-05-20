@@ -17,9 +17,7 @@
     dest: "{{ git_dest }}/docker-compose.override.yml"
 
 - name: Start Docker Compose
-  command: docker compose -f {{ git_dest }}/{{ docker_compose_file }} -f {{ git_dest }}/docker-compose.override.yml up -d
-  args:
-    chdir: "{{ git_dest }}"
+  shell: "docker compose -f {{ git_dest }}/{{ docker_compose_file }} -f {{ git_dest }}/docker-compose.override.yml up -d"
 
 - name: Wait for service to become healthy
   command: >
