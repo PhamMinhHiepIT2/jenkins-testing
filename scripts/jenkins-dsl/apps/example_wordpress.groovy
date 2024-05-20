@@ -2,7 +2,7 @@ pipelineJob('example_wordpress') {
     definition {
         cps {
             script("""
-                IMAGE_TAG_POSTFIX=\$(date +%Y-%m-%d-%H-%M-%S`)
+                IMAGE_TAG_POSTFIX=\$(date '+%Y-%m-%d-%H-%M-%S')
                 pipeline {
                     agent {
                         label 'default'
