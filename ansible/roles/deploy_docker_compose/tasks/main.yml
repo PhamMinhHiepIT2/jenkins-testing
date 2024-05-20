@@ -1,5 +1,6 @@
 ---
 # tasks file for deploy_docker_compose
+
 - name: Ensure Git is installed
   package:
     name: git

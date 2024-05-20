@@ -16,4 +16,5 @@
     git_dest: /opt/app_repo
     healthcheck_url: http://localhost:8080
   roles:
+    - ../../roles/install_jenkins_deps
     - ../../roles/deploy_docker_compose
