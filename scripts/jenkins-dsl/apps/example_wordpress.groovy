@@ -36,6 +36,7 @@ pipelineJob('example_wordpress') {
                                 script {
                                     sh '''
                                         cd ansible
+                                        whoami
                                         ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag=latest-\${IMAGE_TAG_POSTFIX} --vault-password-file .ansible_vault_pass 
                                     '''
                                 }
