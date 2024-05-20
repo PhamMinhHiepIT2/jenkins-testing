@@ -2,7 +2,10 @@ pipelineJob('example_wordpress') {
     definition {
         cps {
             script("""
-                IMAGE_TAG_POSTFIX=\$(date '+%Y-%m-%d-%H-%M-%S')
+                def currentDate = new Date().format("yyyy-MM-dd")
+                def currentTime = new Date().format("HH-mm-ss")
+                env.IMAGE_TAG_POSTFIX = "\${currentDate}-\${currentTime}"
+
                 pipeline {
                     agent {
                         label 'default'
@@ -19,10 +22,9 @@ pipelineJob('example_wordpress') {
                                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
                                         sh '''
                                             cd wpsite
-                                            
-                                            docker build -t phamhiep/wpsite:latest-\$IMAGE_TAG_POSTFIX .
+                                            docker build -t phamhiep/wpsite:latest-\${IMAGE_TAG_POSTFIX} .
                                             docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
-                                            docker push phamhiep/wpsite:latest-\$IMAGE_TAG_POSTFIX
+                                            docker push phamhiep/wpsite:latest-\${IMAGE_TAG_POSTFIX}
                                         '''
                                     }
                                 }
@@ -34,7 +36,7 @@ pipelineJob('example_wordpress') {
                                 script {
                                     sh '''
                                         cd ansible
-                                        ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag=latest-\$IMAGE_TAG_POSTFIX --vault-password-file .ansible_vault_pass 
+                                        ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag=latest-\${IMAGE_TAG_POSTFIX} --vault-password-file .ansible_vault_pass 
                                     '''
                                 }
                             }
