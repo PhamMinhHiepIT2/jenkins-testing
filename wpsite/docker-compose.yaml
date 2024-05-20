@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   wordpress:
@@ -22,6 +22,11 @@ services:
       WORDPRESS_DB_PASSWORD: not-so-secure
       WORDPRESS_DB_NAME: wordpress
       WP_ENV: development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
   db:
     image: mysql
     volumes:

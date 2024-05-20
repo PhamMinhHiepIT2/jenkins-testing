@@ -2,7 +2,7 @@ pipelineJob('example_wordpress') {
     definition {
         cps {
             script("""
-                
+                IMAGE_TAG_POSTFIX=`date +%Y-%m-%d-%H-%M-%S`
                 pipeline {
                     agent {
                         label 'default'
@@ -18,13 +18,24 @@ pipelineJob('example_wordpress') {
                                 script {
                                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
                                         sh '''
-                                            cd example-wordpress
-                                            docker build -t phamhiep/wordpress-example:latest .
-                                            docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
-                                            docker push phamhiep/wordpress-example:latest
+                                            cd wpsite
                                             
+                                            docker build -t phamhiep/wpsite:latest-\$image_tags_postfix .
+                                            docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
+                                            docker push phamhiep/wpsite:latest-\$image_tags_postfix
                                         '''
                                     }
+                                }
+                            }
+                        }
+
+                        stage('Deploy application') {
+                            steps {
+                                script {
+                                    sh '''
+                                        cd ansible
+                                        ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag= --vault-password-file .ansible_vault_pass 
+                                    '''
                                 }
                             }
                         }
