@@ -10,7 +10,7 @@
       65356431656432306533373937313164373834633064303235376565393964373965636536323463
       6434623233616431640a633432653266386464366332643138613231613465356663633466663837
       3732
-    repo_url: git@github.com:PhamMinhHiepIT2/jenkins-testing.git
+    repo_url: https://github.com/PhamMinhHiepIT2/jenkins-testing.git
     service_name: wordpress
     image_name: phamhiep/wpsite
     git_dest: /opt/app_repo
