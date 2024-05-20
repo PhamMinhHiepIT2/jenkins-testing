@@ -1,2 +1,40 @@
 ---
 # tasks file for deploy_docker_compose
+- name: Ensure Git is installed
+  package:
+    name: git
+    state: present
+
+- name: Clone the repository
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ git_dest }}"
+    update: yes
+
+- name: Create docker-compose.override.yml
+  template:
+    src: roles/deploy_docker_compose/templates/docker-compose.override.yml.j2
+    dest: "{{ git_dest }}/docker-compose.override.yml"
+
+- name: Start Docker Compose
+  command: docker-compose -f {{ docker_compose_file }} -f {{ git_dest }}/docker-compose.override.yml up -d
+  args:
+    chdir: "{{ git_dest }}"
+
+- name: Wait for service to become healthy
+  command: >
+    bash -c 'for i in {1..30}; do
+    if curl -s -o /dev/null -w "%{http_code}" {{ healthcheck_url }} | grep -q "200"; then
+      echo "Service is healthy";
+      exit 0;
+    else
+      echo "Waiting for service to become healthy...";
+      sleep 10;
+    fi;
+    done;
+    echo "Service did not become healthy in time";
+    exit 1'
+  register: health_check
+  failed_when: health_check.rc != 0
+  retries: 30
+  delay: 10

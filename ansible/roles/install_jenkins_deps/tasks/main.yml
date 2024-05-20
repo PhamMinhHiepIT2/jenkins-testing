@@ -1,11 +1,33 @@
 ---
 # tasks file for install_java
-- name: Install dependencies
+- name: Install yum packages
   yum:
     name:
       - java-{{ java_version }}-openjdk
       - java-{{ java_version }}-openjdk-devel
       - git
     state: present
+
+- name: Ensure Python is installed
+  package:
+    name: python3
+    state: present
+
+- name: Ensure pip is installed
+  package:
+    name: python3-pip
+    state: present
+
+- name: Ensure pip is upgraded to the latest version
+  pip:
+    name: pip
+    state: latest
+    executable: pip3
+
+- name: Install Ansible via pip
+  pip:
+    name: ansible
+    state: latest
+    executable: pip3
 
 - include_tasks: "install_docker.yaml"

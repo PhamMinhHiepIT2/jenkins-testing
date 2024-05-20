@@ -1,2 +1,3 @@
 ---
 # defaults file for deploy_docker_compose
+docker_compose_version: "3.8"
