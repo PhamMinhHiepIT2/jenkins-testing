@@ -34,15 +34,12 @@ pipelineJob('example_wordpress') {
                         stage('Deploy application') {
                             steps {
                                 script {
-                                    sh '''
-                                        sshagent (credentials: ['app-server-ssh']) {
+                                    sshagent (credentials: ['app-server-ssh']) {
                                         sh '''
                                             cd ansible
-                                            
                                             ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag=latest-\${IMAGE_TAG_POSTFIX} -e service_name=wordpress --vault-password-file .ansible_vault_pass 
                                         '''
                                     } 
-                                    '''
                                 }
                             }
                         }
