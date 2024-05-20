@@ -35,9 +35,13 @@ pipelineJob('example_wordpress') {
                             steps {
                                 script {
                                     sh '''
-                                        cd ansible
-                                        whoami
-                                        ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag=latest-\${IMAGE_TAG_POSTFIX} --vault-password-file .ansible_vault_pass 
+                                        sshagent (credentials: ['app-server-ssh']) {
+                                        sh '''
+                                            cd ansible
+                                            
+                                            ansible-playbook -i inventories/test/hosts.ini playbooks/test/deploy.yml -e new_image_tag=latest-\${IMAGE_TAG_POSTFIX} -e service_name=wordpress --vault-password-file .ansible_vault_pass 
+                                        '''
+                                    } 
                                     '''
                                 }
                             }
